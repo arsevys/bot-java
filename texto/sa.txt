@@ -1,0 +1,189 @@
+
+                
+                  
+                    
+
+The border-collapse CSS property specifies whether a table's borders are separated (cells have distinct borders from each other) or collapsed (adjacent cells share borders).
+
+/* Keyword values */
+border-collapse: collapse;
+border-collapse: separate;
+
+/* Global values */
+border-collapse: inherit;
+border-collapse: initial;
+border-collapse: unset;
+
+
+In the separated-border model only, the distance between cells is defined by the border-spacing property.
+
+In the collapsed-border model only, the border-style value of inset behaves like groove, and outset behaves like ridge.
+
+Initial valueseparateApplies totable and inline-table elementsInheritedyesMediavisualComputed valueas specifiedAnimation typediscreteCanonical orderthe unique non-ambiguous order defined by the formal grammar
+
+Syntax
+
+The border-collapse property is specified as a single keyword, which may be chosen from the list below.
+
+Values
+
+
+ separate
+ Adjacent cells have distinct borders (the separated-border table rendering model).
+ collapse
+ Adjacent cells have shared borders (the collapsed-border table rendering model).
+
+
+Formal syntax
+
+collapse | separate
+
+Examples
+
+A colorful table of browser engines
+
+HTML
+
+<table class="separate">
+  <caption><code>border-collapse: separate</code></caption>
+  <tbody>
+    <tr><th>Browser</th> <th>Layout Engine</th></tr>
+    <tr><td class="fx">Firefox</td> <td class="gk">Gecko</td></tr>
+    <tr><td class="ed">Edge</td> <td class="tr">EdgeHTML</td></tr>
+    <tr><td class="sa">Safari</td> <td class="wk">Webkit</td></tr>
+    <tr><td class="ch">Chrome</td> <td class="bk">Blink</td></tr>
+    <tr><td class="op">Opera</td> <td class="bk">Blink</td></tr>
+  </tbody>
+</table>
+<table class="collapse">
+  <caption><code>border-collapse: collapse</code></caption>
+  <tbody>
+    <tr><th>Browser</th> <th>Layout Engine</th></tr>
+    <tr><td class="fx">Firefox</td> <td class="gk">Gecko</td></tr>
+    <tr><td class="ed">Edge</td> <td class="tr">EdgeHTML</td></tr>
+    <tr><td class="sa">Safari</td> <td class="wk">Webkit</td></tr>
+    <tr><td class="ch">Chrome</td> <td class="bk">Blink</td></tr>
+    <tr><td class="op">Opera</td> <td class="bk">Blink</td></tr>
+  </tbody>
+</table>
+
+CSS
+
+.collapse {
+  border-collapse: collapse;
+}
+
+.separate {
+  border-collapse: separate;
+}
+
+table {
+  display: inline-table;
+  margin: 1em;
+  border: dashed 5px;
+}
+
+table th,
+table td {
+  border: solid 3px;
+}
+
+.fx { border-color: orange blue; }
+.gk { border-color: black red; }
+.ed { border-color: blue gold; }
+.tr { border-color: aqua; }
+.sa { border-color: silver blue; }
+.wk { border-color: gold blue; }
+.ch { border-color: red yellow green blue; }
+.bk { border-color: navy blue teal aqua; }
+.op { border-color: red; }
+
+Result
+
+
+
+Specifications
+
+
+ 
+  
+   Specification
+   Status
+   Comment
+  
+ 
+ 
+  
+   CSS Level 2 (Revision 1)The definition of 'border-collapse' in that specification.
+   Recommendation
+   Initial definition
+  
+ 
+
+
+Browser compatibility
+
+The compatibility table in this page is generated from structured data. If you'd like to contribute to the data, please check out https://github.com/mdn/browser-compat-data and send us a pull request.
+
+
+    
+    
+    
+    Desktop
+    
+    
+    Mobile
+    
+    
+    FeatureChromeEdgeFirefoxInternet ExplorerOperaSafariBasic support1
+      Yes1541.2FeatureAndroid webviewChrome for AndroidEdge mobileFirefox for AndroidIE mobileOpera AndroidiOS SafariBasic support2.3
+      ?
+      Yes47113DesktopMobileChromeEdgeFirefoxInternet ExplorerOperaSafariAndroid webviewChrome for AndroidEdge MobileFirefox for AndroidIE mobileOpera for AndroidiOS SafariBasic support
+                Full support
+              
+              1
+                Full support
+              
+              Yes
+                Full support
+              
+              1
+                Full support
+              
+              5
+                Full support
+              
+              4
+                Full support
+              
+              1.2
+                Full support
+              
+              2.3
+                ?
+              
+                Full support
+              
+              Yes
+                Full support
+              
+              4
+                Full support
+              
+              7
+                Full support
+              
+              11
+                Full support
+              
+              3
+
+See also
+
+
+ border-spacing, border-style
+ The border-collapse property alters the appearance of the <table> HTML element.
+
+                  
+                
+              

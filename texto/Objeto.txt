@@ -1,0 +1,132 @@
+
+                
+                  
+                    
+
+
+
+Resumen
+
+Un objeto similar a un Array que se corresponde con los argumentos pasados a la función.
+
+Sintaxis
+
+arguments
+
+Descripción
+
+El objeto arguments es una variable local disponible dentro de todas las funciones; arguments no puede ser usada como propiedad de Function.
+
+Es posible invocar los argumentos de una funcion utilizando el objeto arguments. Este objeto contiene una entrada para cada argumento pasado a la funcion, la primera entrada tiene un indice de 0. De esa misma manera, si se envian tres parametros a una funcion, se puede acceder a ellos de la siguiente manera:
+
+arguments[0]
+arguments[1]
+arguments[2]
+
+Los argumentos también pueden ser establecidos:
+
+arguments[1] = 'nuevo valor';
+
+El objeto arguments no es un Array. Es similar a un Array, pero no tiene ninguna propiedad Array excepto length. Por ejemplo, no tiene el método pop. Sin embargo este puede ser convertido a un Array real:
+
+var args = Array.prototype.slice.call(arguments);
+
+
+
+No se debería aplicar slice en arguments porque impide optimizaciones en los motores de JavaScript (por ejemplo: V8). Mejor, intente construir un nuevo Array por iteración a través del objeto arguments.
+
+
+Si los Arrays genéricos están disponibles, puede usar la siguiente alternativa:
+
+var args = Array.slice(arguments);
+
+
+El objeto arguments está habilitado solamente dentro del cuerpo de la función. Intentar acceder el objeto arguments fuera de la declaración de la función producirá un error.
+
+El objeto arguments se puede usar si se llama a la función con más argumentos de los que ésta formalmente declarada a aceptar. Esta técnica es útil para funciones a las que se les puede pasar un número indefinido de argumentos. Puede usar arguments.length  para determinar el número de argumentos pasados a la función, y luego procesar cada argumento usando el objeto arguments. (Para determinar el número de argumentos declarados cuando una función fue definida,  use la propiedad Function.length)
+
+Propiedades
+
+arguments.callee: Especifica el cuerpo de función de la función que se ejecuta en ese momento.
+
+arguments.caller   : Especifica el nombre de la función que invocó la función que se ejecuta en ese momento.
+
+arguments.length: Especifica el número de argumentos pasados a la función.
+
+Compatibilidad hacia atrás
+
+JavaScript 1.3 y versiones anteriores
+
+Además de estar disponible como variable local, el objeto arguments también es una propiedad del objeto Function y puede estar precedida por el nombre de la función. Por ejemplo, si se pasa a una función miFuncion tres argumentos llamados argumento1, argumento2, y argumento3, puede referirse a dichos argumentos como:
+
+miFuncion.arguments[0]
+miFuncion.arguments[1]
+miFuncion.arguments[2] 
+
+
+JavaScript 1.1 y 1.2
+
+Las siguientes características, que estaban disponibles en JavaScript 1.1 y JavaScript 1.2, han sido eliminadas:
+
+
+ Cada variable local de una función es una propiedad del objeto arguments. Por ejemplo, si una función myFunc tiene una variable local llamada miVariableLocal, puede referirse a dicha variable como arguments.miVariableLocal.
+
+
+
+ Cada argumento formal de una función es una propiedad del objeto arguments. Por ejemplo, si una función miFuncion tiene dos argumentos llamados argumento1 y argumento2, puede referirse a dichos argumentos como arguments.argumento1 y arguments.argumento2. (También puede referirse a ellos como arguments[0] y arguments[1].)
+
+
+Ejemplos
+
+Definir una función que concatena varios strings
+
+Esta ejemplo define una función que concatena varios strings. El único argumento formal de la función es un string que especifica los caracteres que separan los elementos a concatenar. La función es definida de la siguiente forma:
+
+function miConcat(separador) {
+  var resultado = "";
+
+  // Iterar a través de los otros argumentos enviados
+  for (var i = 1; i < arguments.length; i++)
+    resultado += arguments[i] + separator;
+
+  return resultado;
+}
+
+
+Puede pasar un número indefinido de argumentos para esta función, y ésta creará una lista usando cada argumento como un elemento de la lista.
+
+// Devuelve "rojo, naranja, azul, "
+miConcat(", ", "rojo", "naranja", "azul");
+
+// Devuelve "elefante; jirafa; león; leopardo; "
+miConcat("; ", "elefante", "jirafa", "león", "leopardo");
+
+// Devuelve "salvia. albahaca. oregano. pimineta. perejil. "
+miConcat(". ", "salvia", "albahaca", "oregano", "pimineta", "perejil");
+
+
+Definir una función que crea una lista HTML
+
+Este ejemplo define una función que crea un string que contiene HTML para una lista. El único argumento formal de la función es "u" si la lista es desordenada (viñetas), ú "o" si la lista es ordenada (numerada). La función se define de la siguiente manera:
+
+function lista(tipo) {
+  var resultado = "<" + tipo+ "l>";
+
+  // Iterar a través de los otros argumentos enviados
+  for (var i = 1; i < arguments.length; i++)
+    resultado += "<li>" + arguments[i] + "</li>";
+
+  resultado += "</" + tipo+ "l>"; // fin de la lista
+
+  return resultado;
+}
+
+
+Puede pasar un número indefinido de argumentos para esta función, y ésta añadirá cada argumento como un elemento de la lista del tipo indicado. Por ejemplo:
+
+var listaHTML = lista("u", "Uno", "Dos", "Tres");
+// listaHTML es "<ul><li>Uno</li><li>Dos</li><li>Tres</li></ul>"
+
+                  
+                
+              

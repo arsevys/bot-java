@@ -1,0 +1,185 @@
+
+                
+                  
+                    
+
+The static keyword defines a static method for a class.
+
+Syntax
+
+static methodName() { ... }
+
+Description
+
+Static method calls are made directly on the class and are not callable on instances of the class. Static methods are often used to create utility functions.
+
+Calling static methods
+
+From another static method
+
+In order to call a static method within another static method of the same class, you can use the this keyword.
+
+class StaticMethodCall {
+  static staticMethod() {
+    return 'Static method has been called';
+  }
+  static anotherStaticMethod() {
+    return this.staticMethod() + ' from another static method';
+  }
+}
+StaticMethodCall.staticMethod(); 
+// 'Static method has been called'
+
+StaticMethodCall.anotherStaticMethod(); 
+// 'Static method has been called from another static method'
+
+From class constructor and other methods
+
+Static methods are not directly accessible using the this keyword from non-static methods. You need to call them using the class name: CLASSNAME.STATIC_METHOD_NAME() or by calling the method as a property of the constructor: this.constructor.STATIC_METHOD_NAME().
+
+class StaticMethodCall {
+  constructor() {
+    console.log(StaticMethodCall.staticMethod()); 
+    // 'static method has been called.' 
+
+    console.log(this.constructor.staticMethod()); 
+    // 'static method has been called.' 
+  }
+
+  static staticMethod() {
+    return 'static method has been called.';
+  }
+}
+
+Examples
+
+The following example demonstrates several things:
+
+
+ How a static method is implemented on a class.
+ That a class with a static member can be sub-classed.
+ How a static method can and cannot be called.
+
+
+class Triple {
+  static triple(n) {
+    if (n === undefined) {
+      n = 1;
+    }
+    return n * 3;
+  }
+}
+
+class BiggerTriple extends Triple {
+  static triple(n) {
+    return super.triple(n) * super.triple(n);
+  }
+}
+
+console.log(Triple.triple());        // 3
+console.log(Triple.triple(6));       // 18
+
+var tp = new Triple();
+
+console.log(BiggerTriple.triple(3));
+// 81 (not affected by parent's instantiation)
+
+console.log(tp.triple());
+// 'tp.triple is not a function'.
+
+
+Specifications
+
+
+ 
+  
+   Specification
+   Status
+   Comment
+  
+  
+   ECMAScript 2015 (6th Edition, ECMA-262)The definition of 'Class definitions' in that specification.
+   Standard
+   Initial definition.
+  
+  
+   ECMAScript Latest Draft (ECMA-262)The definition of 'Class definitions' in that specification.
+   Living Standard
+    
+  
+ 
+
+
+Browser compatibility
+
+The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out https://github.com/mdn/browser-compat-data and send us a pull request.
+
+
+    
+    
+    
+    Desktop
+    
+    
+    Mobile
+    
+    
+    FeatureChromeEdgeFirefoxInternet ExplorerOperaSafariBasic support4911345
+      No439FeatureAndroid webviewChrome for AndroidEdge mobileFirefox for AndroidIE mobileOpera AndroidiOS SafariBasic support
+      ?
+      Yes1345
+      No
+      ?91. From Chrome 42 to 48 strict mode is required. Non-strict mode support can be enabled using the flag "Enable Experimental JavaScript".DesktopMobileServerChromeEdgeFirefoxInternet ExplorerOperaSafariAndroid webviewChrome for AndroidEdge MobileFirefox for AndroidIE mobileOpera for AndroidiOS SafariNode.jsBasic support
+                Full support
+              
+              49Notes 
+                Full support
+              
+              49Notes Notes From Chrome 42 to 48 strict mode is required. Non-strict mode support can be enabled using the flag "Enable Experimental JavaScript".
+                Full support
+              
+              13
+                Full support
+              
+              45
+                No support
+              
+              No
+                Full support
+              
+              43
+                Full support
+              
+              9
+                ?
+              
+                Full support
+              
+              Yes
+                Full support
+              
+              13
+                Full support
+              
+              45
+                No support
+              
+              No
+                ?
+              
+                Full support
+              
+              9
+                ?
+              
+
+See also
+
+
+ class expression
+ class declaration
+ Classes
+
+                  
+                
+              

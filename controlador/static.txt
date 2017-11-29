@@ -1,0 +1,384 @@
+
+                
+                  
+                     
+    This is a new technology, part of the ECMAScript 2015 (ES6) standard.This technology's specification has been finalized, but  check the compatibility table for usage and implementation status in various browsers.
+
+
+La sentencia let declara una variable de alcance local, la cual, opcionalmente, puede ser inicializada con algún valor.
+
+La palabra reservada let en Mozilla Firefox está solo disponible para bloques de código en HTML envueltos en una etiqueta <script type="application/javascript;version=1.7"> (o de una version mayor). Las etiquetas XUL tienen acceso a esas características sin necesidad de dicho bloque. Es necesario tomar en cuenta que estas es una característica no estándar, esto puede crear conflictos con otros navegadores.
+
+Sintaxis
+
+let var1 [= valor1] [, var2 [= valor2]] [, ..., varN [= valorN]];
+
+Parámetros
+
+
+ var1, var2, …, varN
+ Nombre de la variable. Puede ser cualquier identificador de variable legal.
+ value1, value2, …, valueN
+ Valor inicial de la variable. Puede ser cualquier expresión legal.
+
+
+Descripción
+
+let permite declarar variables limitando su alcance (scope) al bloque, declaración, o expresión donde se está usando. Lo anterior diferencia  la expresión let de la palabra reservada var , la cual define una variable global o local en una función sin importar el ámbito del bloque.
+
+Alcance (scope) a nivel de bloque con let
+
+Usar la palabra reservada let para definir variables dentro de un bloque.
+
+if (x > y) {
+  let gamma = 12.7 + y;
+  i = gamma * x;
+}
+
+
+Es posible usar definiciones let para asociar código en extensiones con un pseudo-espacio-de-nombre (pseudo-namespace). (Ver Mejores prácticas de seguridad en extensiones.)
+
+let Cc = Components.classes, Ci = Components.interfaces;
+
+
+let puede ser útil para escribir código más limpio cuando usamos funciones internas.
+
+var list = document.getElementById("list");
+
+for (var i = 1; i <= 5; i++) {
+  var item = document.createElement("LI");
+  item.appendChild(document.createTextNode("Item " + i));
+
+  let j = i;
+  item.onclick = function (ev) {
+    console.log("Item " + j + " is clicked.");
+  };
+  list.appendChild(item);
+}
+
+
+El ejemplo anterior trabaja como se espera porque las cinco instancias de la función (anónima) interna hacen referencia a cinco diferentes instancias de la variable j. Nótese que esto no funcionaría como se espera si reemplazamos let con var o si removemos la variable j y simplemente usamos la variable i dentro de la función interna.
+
+Reglas de alcance
+
+Variables declaradas por let tienen por alcance el bloque en el que se han definido, así mismo, como en cualquier bloque interno. De esta manera, let trabaja muy parecido a var. La más notable diferencia es que el alcance de una variable var es la función contenedora:
+
+function varTest() {
+  var x = 31;
+  if (true) {
+    var x = 71;  // ¡misma variable!
+    console.log(x);  // 71
+  }
+  console.log(x);  // 71
+}
+
+function letTest() {
+  let x = 31;
+  if (true) {
+    let x = 71;  // variable diferente
+    console.log(x);  // 71
+  }
+  console.log(x);  // 31
+}
+
+
+En el nivel superior de un programa y funciones, let , a diferencia de var, no crea una propiedad en el objeto global, por ejemplo:
+
+var x = 'global';
+let y = 'global';
+console.log(this.x); // "global"
+console.log(this.y); // undefined
+
+
+La salida de este código desplegaría "global" una vez.
+
+Zona muerta temporal y errores con let
+
+La redeclaración de la misma variable bajo un mismo ámbito de bloque terminaría en un error de tipo SyntaxError.
+
+if (x) {
+  let foo;
+  let foo; // Terminamos con un SyntaxError.
+}
+
+
+En ECMAScript 2015, let no eleva la variable a la parte supertior del bloque. Si se hace una referencia a la variable antes de declarar la misma variable con let terminaríamos con un error de tipo ReferenceError, esto porque la variables vive en una "zona muerta temporal" desde el inicio del bloque hasta que la declaración ha sido procesada.
+
+function do_something() {
+  console.log(bar); // undefined
+  console.log(foo); // ReferenceError: foo is not defined
+  var bar = 1;
+  let foo = 2;
+}
+
+Es posible encontrar errores en bloques de control switch debido a que solamente existe un block subyacente.
+
+switch (x) {
+  case 0:
+    let foo;
+    break;
+    
+  case 1:
+    let foo; // Terminamos con un error de tipo SyntaxError.
+             // esto debido a la redeclaracion
+    break;
+}
+
+Variables con alcance let en bucles for
+
+Es posible usar la palabra reservada let para enlazar variables locales dentro del alcance de un bucle for. Esto es diferente a usar la palabra reservada var al inicio de un bucle for, lo cual hace la variable visible en toda la función que contiene dicho bucle.
+
+var i=0;
+for ( let i=i ; i < 10 ; i++ ) {
+  console.log(i);
+}
+
+
+Reglas de alcance
+
+for (let expr1; expr2; expr3) declaracion
+
+
+En este caso, expr2, expr3, y declaración están contenidos en un bloque implícito que contiene las variables locales al bloque definidas por let expr1. Esto se puede demostrar en el primer bucle anterior.
+
+Ejemplos
+
+let vs var
+
+Cuando usamos let dentro de un bloque, podemos limitar el alcance de la variable a dicho bloque. Notemos la diferencia con var, cuyo alcance reside dentro de la función donde ha sido declarada la variable.
+
+var a = 5;
+var b = 10;
+
+if (a === 5) {
+  let a = 4; // El alcance es dentro del bloque if
+  var b = 1; // El alcance es global
+
+  console.log(a);  // 4
+  console.log(b);  // 1
+} 
+
+console.log(a); // 5
+console.log(b); // 1
+
+let en bucles
+
+Es posible usar la palabra reservada let para enlazar variables con alcance local dentro del alcance de un bucle en lugar de usar una variable global (definida usando var) para dicho propósito.
+
+for (let i = 0; i<10; i++) {
+  console.log(i); // 0, 1, 2, 3, 4 ... 9
+}
+
+console.log(i); // ReferenceError: i is not defined
+
+Extensiones let no-estandar
+
+
+La sintaxis del bloque y expresion let es no-estandar y sera deshechado en un futuro. ¡No deben ser usados! ver error 1023609 y error 1167029 para mas detalles.
+
+
+Bloques let
+
+Un bloque let provee una manera de asociar valores con variables dentro del alcance de un bloque sin afectar el valor de variables con nombre similar fuera del bloque.
+
+Sintaxis
+
+let (var1 [= value1] [, var2 [= value2]] [, ..., varN [= valueN]]) statement;
+
+Descripción
+
+El bloque let provee alcance local para las variables. Funciona enlazando cero o más variables en el alcance léxico de un solo bloque de código; de otra manera, es exactamente lo mismo que una declaración de bloque. Hay que notar particularmente que el alcance de una variable declarada dentro de un bloque let usando var es equivalente a declarar esa variable fuera del bloque let; dicha variable aún tiene alcance dentro de la función. Al usar la sintaxis de bloque let, los paréntesis siguientes a let son requeridos. Una falla al incluir dichos paréntesis resultará en un error de sintaxis.
+
+Ejemplo
+
+var x = 5;
+var y = 0;
+
+let (x = x+10, y = 12) {
+  console.log(x+y); // 27
+}
+
+console.log(x + y); // 5
+
+
+Las reglas para el bloque de código son las mismas que para cualquier otro bloque de código en JavaScript. Es posible tener sus propias variables locales usando declaraciones let en dicho bloque.
+
+Reglas de alcance
+
+El alcance de las variables definidas usando let es el mismo bloque let, así como cualquier bloque interno contenido dentro de el bloque, a menos que esos bloques internos definan variables con el mismo nombre.
+
+expresiones let
+
+
+Soporte de expresiones let ha sido removido en Gecko 41 (error 1023609).
+
+
+Una expresion let permite establecer variables con alcance dentro de una expresión.
+
+Sintaxis
+
+let (var1 [= value1] [, var2 [= value2]] [, ..., varN [= valueN]]) expression;
+
+Ejemplo
+
+Podemos usar let para establecer variables que tienen como alcance solo una expresión:
+
+var a = 5;
+let(a = 6) console.log(a); // 6
+console.log(a); // 5
+
+Reglas de alcance
+
+Dada la expresión let siguiente:
+
+let (decls) expr
+
+
+Existe un bloque implícito creado alrededor de expr.
+
+Especificaciones
+
+
+ 
+  
+   Especificación
+   Estado
+   Comentarios
+  
+  
+   ECMAScript 2015 (6th Edition, ECMA-262)La definición de 'Let and Const Declarations' en esta especificación.
+   Standard
+   Definición initial. No especifica expresiones ni declaraciones let.
+  
+ 
+
+
+Compatibilidad en navegadores
+
+
+    
+    
+        Escritorio
+        Móvil
+    
+
+
+
+
+ 
+  
+   Característica
+   Chrome
+   Firefox (Gecko)
+   Internet Explorer
+   Opera
+   Safari
+  
+  
+   Soporte básico
+   
+    41.0
+   
+   2.0 (1.8.1) [1]
+   11
+   17
+   ?
+  
+  
+   Zona muerta temporal
+   ?
+   35 (35) [1]
+   ?
+   ?
+   ?
+  
+  
+   Expresión let  
+   Sin soporte
+   2.0 (1.8.1)-40 (40) [1]
+   Sin soporte
+   Sin soporte
+   Sin soporte
+  
+  
+   Bloque let  
+   Sin soporte
+   2.0 (1.8.1) [1]
+   Sin soporte
+   Sin soporte
+   Sin soporte
+  
+ 
+
+
+
+
+
+ 
+  
+   Característica
+   Android
+   Chrome para Android
+   Firefox Mobile (Gecko)
+   IE Mobile
+   Opera Mobile
+   Safari Mobile
+  
+  
+   Soporte básico
+   ?
+   
+    41.0
+   
+   1.0 (1.8.1) [1]
+   ?
+   ?
+   ?
+  
+  
+   Zona muerta temporal
+   ?
+   ?
+   35.0 (35) [1]
+   ?
+   ?
+   ?
+  
+  
+   Expresión let  
+   Sin soporte
+   Sin soporte
+   1.0 (1.8.1)-40.0 (40)[1]
+   Sin soporte
+   Sin soporte
+   Sin soporte
+  
+  
+   Bloque let  
+   Sin soporte
+   Sin soporte
+   1.0 (1.8.1) [1]
+   Sin soporte
+   Sin soporte
+   Sin soporte
+  
+ 
+
+
+
+Notas específicas a Firefox
+
+
+ [1]: Solo disponible para bloques de codigo HTML dentro de una etiqueta <script> type="application/javascript;version=1.7"> (o de una versión mayor). Es necesario tomar en cuenta que estas es una característica no estándar, esto puede crear conflictos con otros navegadores. Las etiquetas XUL tienen acceso a esas características sin necesidad de dicho bloque. Vererror 932517.
+ Conformidad con ES2015 para let en SpIderMonkey es monitoreado en error 950547 y extensiones no-standar seran eliminadas en el futuro error 1023609.
+
+
+Ver también
+
+
+ var
+ const
+
+                  
+                
+              

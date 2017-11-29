@@ -1,0 +1,323 @@
+
+                
+                  
+                    
+
+The let statement declares a block scope local variable, optionally initializing it to a value.
+
+Syntax
+
+let var1 [= value1] [, var2 [= value2]] [, ..., varN [= valueN]];
+
+Parameters
+
+
+ var1, var2, …, varN
+ Variable name. It can be any legal identifier.
+ value1, value2, …, valueN
+ Initial value of the variable. It can be any legal expression.
+
+
+Description
+
+let allows you to declare variables that are limited in scope to the block, statement, or expression on which it is used. This is unlike the var keyword, which defines a variable globally, or locally to an entire function regardless of block scope.
+
+An explanation of why the name "let" was chosen can be found here.
+
+Scoping rules
+
+Variables declared by let have as their scope the block in which they are defined, as well as in any contained sub-blocks. In this way, let works very much like var. The main difference is that the scope of a var variable is the entire enclosing function:
+
+function varTest() {
+  var x = 1;
+  if (true) {
+    var x = 2;  // same variable!
+    console.log(x);  // 2
+  }
+  console.log(x);  // 2
+}
+
+function letTest() {
+  let x = 1;
+  if (true) {
+    let x = 2;  // different variable
+    console.log(x);  // 2
+  }
+  console.log(x);  // 1
+}
+
+
+Cleaner code in inner functions
+
+let sometimes makes the code cleaner when inner functions are used.
+
+var list = document.getElementById('list');
+
+for (let i = 1; i <= 5; i++) {
+  let item = document.createElement('li');
+  item.appendChild(document.createTextNode('Item ' + i));
+
+  item.onclick = function(ev) {
+    console.log('Item ' + i + ' is clicked.');
+  };
+  list.appendChild(item);
+}
+
+// to achieve the same effect with 'var'
+// you have to create a different context
+// using a closure to preserve the value
+for (var i = 1; i <= 5; i++) {
+  var item = document.createElement('li');
+  item.appendChild(document.createTextNode('Item ' + i));
+
+  (function(i){
+    item.onclick = function(ev) {
+      console.log('Item ' + i + ' is clicked.');
+    };
+  })(i);
+  list.appendChild(item);
+}
+
+
+The example above works as intended because the five instances of the (anonymous) inner function refer to five different instances of the variable i. Note that it does not work as intended if you replace let with var, since all of the inner functions would then return the same final value of i: 6. Also, we can keep the scope around the loop cleaner by moving the code that creates the new elements into the scope of each loop.
+
+At the top level of programs and functions, let, unlike var, does not create a property on the global object. For example:
+
+var x = 'global';
+let y = 'global';
+console.log(this.x); // "global"
+console.log(this.y); // undefined
+
+
+Emulating private members
+
+In dealing with constructors it is possible to use the let bindings to share one or more private members without using closures:
+
+var Thing;
+
+{
+  let privateScope = new WeakMap();
+  let counter = 0;
+
+  Thing = function() {
+    this.someProperty = 'foo';
+    
+    privateScope.set(this, {
+      hidden: ++counter,
+    });
+  };
+
+  Thing.prototype.showPublic = function() {
+    return this.someProperty;
+  };
+
+  Thing.prototype.showPrivate = function() {
+    return privateScope.get(this).hidden;
+  };
+}
+
+console.log(typeof privateScope);
+// "undefined"
+
+var thing = new Thing();
+
+console.log(thing);
+// Thing {someProperty: "foo"}
+
+thing.showPublic();
+// "foo"
+
+thing.showPrivate();
+// 1
+
+
+Temporal Dead Zone and errors with let
+
+Redeclaring the same variable within the same function or block scope raises a SyntaxError.
+
+if (x) {
+  let foo;
+  let foo; // SyntaxError thrown.
+}
+
+In ECMAScript 2015, let bindings are not subject to Variable Hoisting, which means that let declarations do not move to the top of the current execution context. Referencing the variable in the block before the initialization results in a ReferenceError (contrary to a variable declared with var, which will just have the undefined value). The variable is in a "temporal dead zone" from the start of the block until the initialization is processed.
+
+function do_something() {
+  console.log(bar); // undefined
+  console.log(foo); // ReferenceError
+  var bar = 1;
+  let foo = 2;
+}
+
+You may encounter errors in switch statements because there is only one block.
+
+let x = 1;
+switch(x) {
+  case 0:
+    let foo;
+    break;
+    
+  case 1:
+    let foo; // SyntaxError for redeclaration.
+    break;
+}
+
+However, it's important to point out that a block nested inside a case clause will create a new block scoped lexical environment, which will not produce the redeclaration errors shown above.
+
+let x = 1;
+
+switch(x) {
+  case 0: {
+    let foo;
+    break;
+  }  
+  case 1: {
+    let foo;
+    break;
+  }
+}
+
+Another example of temporal dead zone combined with lexical scoping
+
+Due to lexical scoping, the identifier "foo" inside the expression (foo + 55) evaluates to the if block's foo, and not the overlying variable foo with the value of 33.
+ In that very line, the if block's "foo" has already been created in the lexical environment, but has not yet reached (and terminated) its initialization (which is part of the statement itself): it's still in the temporal dead zone.
+
+function test(){
+   var foo = 33;
+   if (true) {
+      let foo = (foo + 55); // ReferenceError
+   }
+}
+test();
+
+This phenomenon may confuse you in a situation like the following. The instruction let n of n.a is already inside the private scope of the for loop's block, hence the identifier "n.a" is resolved to the property 'a' of the 'n' object located in the first part of the instruction itself ("let n"), which is still in the temporal dead zone since its declaration statement has not been reached and terminated.
+
+function go(n) {
+  // n here is defined!
+  console.log(n); // Object {a: [1,2,3]}
+
+  for (let n of n.a) { // ReferenceError
+    console.log(n);
+  }
+}
+
+go({a: [1, 2, 3]});
+
+
+Other situations
+
+When used inside a block, let limits the variable's scope to that block. Note the difference between var whose scope is inside the function where it is declared.
+
+var a = 1;
+var b = 2;
+
+if (a === 1) {
+  var a = 11; // the scope is global
+  let b = 22; // the scope is inside the if-block
+
+  console.log(a);  // 11
+  console.log(b);  // 22
+} 
+
+console.log(a); // 11
+console.log(b); // 2
+
+Specifications
+
+
+ 
+  
+   Specification
+   Status
+   Comment
+  
+  
+   ECMAScript 2015 (6th Edition, ECMA-262)The definition of 'Let and Const Declarations' in that specification.
+   Standard
+   Initial definition. Does not specify let expressions or let blocks.
+  
+  
+   ECMAScript Latest Draft (ECMA-262)The definition of 'Let and Const Declarations' in that specification.
+   Living Standard
+    
+  
+ 
+
+
+Browser compatibility
+
+The compatibility table on this page is generated from structured data. If you'd like to contribute to the data, please check out https://github.com/mdn/browser-compat-data and send us a pull request.
+
+
+    
+    
+    
+    Desktop
+    
+    
+    Mobile
+    
+    
+    FeatureChromeEdgeFirefoxInternet ExplorerOperaSafariBasic support4112441 2 3111710FeatureAndroid webviewChrome for AndroidEdge mobileFirefox for AndroidIE mobileOpera AndroidiOS SafariBasic support414112441 2 3
+      ?17101. Prior to Firefox 44, let is only available to code blocks in HTML wrapped in a <script type="application/javascript;version=1.7"> block (or higher version) and has different semantics (e.g. no temporal dead zone).2. Prior to Firefox 46, a TypeError is thrown on redeclaration instead of a SyntaxError.3. Firefox 54 adds support of let in workers.DesktopMobileServerChromeEdgeFirefoxInternet ExplorerOperaSafariAndroid webviewChrome for AndroidEdge MobileFirefox for AndroidIE mobileOpera for AndroidiOS SafariNode.jsBasic support
+                Full support
+              
+              41
+                Full support
+              
+              12
+                Full support
+              
+              44Notes 
+                Full support
+              
+              44Notes Notes Prior to Firefox 44, let is only available to code blocks in HTML wrapped in a <script type="application/javascript;version=1.7"> block (or higher version) and has different semantics (e.g. no temporal dead zone).Notes Prior to Firefox 46, a TypeError is thrown on redeclaration instead of a SyntaxError.Notes Firefox 54 adds support of let in workers.
+                Full support
+              
+              11
+                Full support
+              
+              17
+                Full support
+              
+              10
+                Full support
+              
+              41
+                Full support
+              
+              41
+                Full support
+              
+              12
+                Full support
+              
+              44Notes 
+                Full support
+              
+              44Notes Notes Prior to Firefox 44, let is only available to code blocks in HTML wrapped in a <script type="application/javascript;version=1.7"> block (or higher version) and has different semantics (e.g. no temporal dead zone).Notes Prior to Firefox 46, a TypeError is thrown on redeclaration instead of a SyntaxError.Notes Firefox 54 adds support of let in workers.
+                ?
+              
+                Full support
+              
+              17
+                Full support
+              
+              10
+                Full support
+              
+              Yes
+
+See also
+
+
+ var
+ const
+ ES6 In Depth: let and const
+ Breaking changes in let and const in Firefox 44
+ You Don't Know JS: Scope & Closures: Chapter 3: Function vs. Block Scope
+ StackOverflow: What is the difference between using let and var?
+
+                  
+                
+              

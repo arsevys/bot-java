@@ -1,0 +1,68 @@
+
+                
+                  
+                     
+<< Volver
+Resumen
+La propiedad float especifica si un elemento debe salir del flujo normal y aparecer a la izquierda o a la derecha de su contenedor, donde los elementos de texto y los en línea aparecerán a su alrededor.
+ valor inicial: ninguno Se aplica a: todos los elementos valor heredado: no Porcentajes: Media: visual valor calculado: como se especifica
+
+Un elemento flotante es un elemento en el que el valor calculado de float no es igual a none.
+Nota: Al referirse a una propiedad desde JavaScript como un miembro del objeto element.style, hay que escribir la propiedad como cssFloat (ver la lista en DOM:CSS). Atención: IE llama a esta propiedad styleFloat.
+Sintaxis
+float: left | right | none | inherit
+Valores
+ left : El elemento flota a la izquierda de su bloque contenedor. right :	El elemento flota a la derecha de su bloque contenedor. none : El elemento no flota.
+
+Ejemplos
+Ver El Ejemplo Vivo
+<html>
+ <head>
+  <style type="text/css">
+   b
+   {
+     font-size: 25px;
+     float:right;
+   }
+  </style>
+ </head>
+ <body>
+ 
+  <p>
+    <b>Hola!</b>
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+        Esto es un poco de texto. Esto es un poco de texto. Esto es un poco de texto.
+  </p>
+ 
+</body>
+</html>
+
+Notas
+FALTA: explicar cómo se posiciona un elemento flotante. Mención de contexto de formación de los bloques. (A traducir de en.)
+Especificaciones
+ CSS 1 CSS 2.1
+
+Compatibilidad de navegadores
+   Navegador Versión mínima   Internet Explorer 4   Netscape 4   Opera 3.5  
+
+Ver también
+clear, display, position
+ 
+
+Categorías
+Interwiki Languages
+
+
+                  
+                
+              

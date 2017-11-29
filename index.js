@@ -15,7 +15,7 @@ scrapeMdn.search('let').then((results) => {
   rq("https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Sentencias/let",(err,res,reshtml)=>{
 // console.log(reshtml);
 var $=cheerio.load(reshtml);
-console.log($("#wikiArticle").text());
+// console.log($("#wikiArticle").text());
    fs.writeFile(__dirname + '/ok.html', $("#wikiArticle").text(), function(err){
       
 

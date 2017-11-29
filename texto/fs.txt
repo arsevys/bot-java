@@ -1,0 +1,341 @@
+
+                
+                  
+                    La creación de formularios web siempre ha sido una tarea compleja. Mientras armar el formulario en sí es fácil, verificar si cada campo tiene un valor que es válido y coherente es aun más difícil, e informar al usuario acerca del problema puede convertirse en un dolor de cabeza. HTML5 introdujo nuevos mecanismos para formularios: añadió nuevos tipos semánticos para el elemento <input> y validación de restricciones para facilitar el trabajo de revisar el contenido del formulario de lado del cliente. Se pueden usar restricciones básicas y comunes, sin la necesidad de JavaScript, estableciendo nuevos atributos; para restricciones más complejas se puede usar la API de Validación de Restricciones de HTML.
+
+Nota: La validación de restricciones de HTML5 no elimina la necesidad de hacer validaciones de lado del servidor. Aunque se esperen menos envíos con formularios inválidos, sí se pueden seguir recibiendo datos inválidos, en navegadores sin soporte (por ejemplo, navegadores sin HTML y sin JavaScript) o por chicos malos que traten de burlar las restricciones de la aplicación. Por lo tanto, como en HTML4, también tendrás que validar las restricciones de captura del lado del servidor, de modo que sea consistente con las que se hacen del lado del cliente.
+
+Restricciones intrínsecas y básicas
+
+En HTML5, las restricciones básicas son declaradas de dos formas:
+
+
+ Eligiendo el valor semánticamente más apropiado para el atributo type del elemento <input>, por ejemplo, elegir el tipo email creará automáticamente la restricción para verificar que el valor sea una dirección de correo electrónico válida.
+ Estableciendo valores a los atributos de validación, permitiendo que se describan restricciones básicas de manera simple, sin la necesidad de JavaScript.
+
+
+Tipos de captura semánticos
+
+Las restricciones intrínsecas para el atributo type son:
+
+
+ 
+  
+   Tipo de input
+   Descripción
+   Incumplimiento asociado
+  
+ 
+ 
+  
+   <input type="URL">
+   El valor debe ser una URL absoluta, es decir, una de las siguientes:
+    
+     una URI válida (como se define en RFC 3986)
+     una IRI válida, sin un componente de query (como se define en RFC 3987)
+     una IRI válida, con componente de query sin caracteres no ASCII sin escapar (como se define en RFC 3987)
+     una IRI válida, y que el conjunto de caracteres para el documento sea UTF-8 o UTF-16 (como se define en RFC 3987)
+    
+   
+   Incumplimiento de restricción por tipo no coincidente (Type mismatch)
+  
+  
+    <input type="email">
+   El valor debe obedecer a la producción ABNF: 1*( atext / "." ) "@" ldh-str 1*( "." ldh-str ) donde:
+    
+     atext está definido en  RFC 5322, y representa una letra US-ASCII (A-Z y a-z), un dígito (0-9) o uno de los siguientes caracteres especiales: ! # $ % & ' * + - / = ? ` { } | ~,
+     ldh-str está definido en RFC 1034, y representa letras US-ASCII, combinadas con dígitos y el símbolo - agrupados en palabras separadas por un punto (.).
+    
+
+    Nota: si se estableció el atributo multiple, se pueden definir distintas direcciones de correo, separadas por coma, para este control. Si cualquiera de ellas no satisface la condición descrita aquí, se ejecuta el incumplimiento de restricción por tipo no coincidente.
+   
+   Incumplimiento de restricción por tipo no coincidente (Type mismatch)
+  
+ 
+
+
+Nótese que la mayoría de los tipos de input no tienen restricciones intrínsecas, puesto que algunos simplemente son excluidos de la validación de restricciones, o tienen un algoritmo de sanitización que transforma los valores incorrectos a uno valor correcto predeterminado. 
+
+Atributos relacionados con validaciones
+
+Los siguientes atributos son usados para describir restricciones básicas:
+
+
+ 
+  
+   Atributo
+   Tipos de input que soportan el atributo
+   Valores posibles
+   Descripción
+   Incumplimiento asociado
+  
+ 
+ 
+  
+   pattern
+   text, search, url, tel, email, password
+   Una expresión regular de JavaScript (compilada con las banderas global, ignoreCase, y multiline de ECMAScript 5 desabilitadas)
+   El valor debe coincidir con el patrón.
+   Incumplimiento de restricción por incompatibilidad de patrones (Pattern mismatch)
+  
+  
+   min
+   range, number
+   Un número válido
+   El valor debe ser mayor o igual al de este atributo.
+   Incumplimiento de restricción por flujo insuficiente (Underflow)
+  
+  
+   date, month, week
+   Una fecha válida
+  
+  
+   datetime, datetime-local, time
+   Una fecha y hora válidos
+  
+  
+   max
+   range, number
+   Un número válido
+   El valor debe ser menor o igual al de este atributo
+   Incumplimiento de restricción por desborde (Overflow)
+  
+  
+   date, month, week
+   Una fecha válida
+  
+  
+   datetime, datetime-local, time
+   Una fecha y hora válidos
+  
+  
+   required
+   text, search, url, tel, email, password, date, datetime, datetime-local, month, week, time, number, checkbox, radio, file; también en los elementos <select> y <textarea>
+   ninguno, pues éste es un atributo de tipo Boolean: su presencia representa true, y su ausencia representa false
+   Debe tener un valor (si se establece).
+   Incumplimiento de restricción por ausencia (Missing)
+  
+  
+   step
+   date
+   Un número entero de días
+   A menos que se establezca el atributo con la literal any, el valor debe ser min + un enter múltiplo del valor de este atributo.
+   Incumplimiento de restricción por inconsistencia de paso (Step mismatch)
+  
+  
+   month
+   Un número entero de meses
+  
+  
+   week
+   Un número entero de semanas
+  
+  
+   datetime, datetime-local, time
+   Un número entero de segundos
+  
+  
+   range, number
+   Un entero
+  
+  
+   maxlength
+   text, search, url, tel, email, password; también en el elemento <textarea>
+   Una longitud en enteros
+   El número de caracteres (puntos de código) no debe exceder el valor del atributo.
+   Incumplimiento de restricción por ser muy largo (Too long)
+  
+ 
+
+
+Proceso de validación de restricciones
+
+La validación de restricciones se hace a través de la API de Validación de Restricciones, ya sea en un elemento de formulario individual o a nivel de formulario, en el elemento <form> mismo. La validación de restricciones se hace de las siguientes maneras:
+
+
+ Invocando a la función checkValidity() de una interfaz DOM relacionada con formas (HTMLInputElement, HTMLSelectElement, HTMLButtonElement o HTMLTextAreaElement), la cual evalúa las restricciones para este elemento únicamente, permitiendo que un script obtenga esta información. (Esto lo hace comúnmente el agente usuario cuando determina cuál de las pseudo-clases CSS, :valid o :invalid, se aplicará.)
+ Invocando a la función checkValidity() en la interfaz HTMLFormElement, llamada validación estática de restricciones.
+ Enviando el formulario en sí, llamado validación interactiva de restricciones.
+
+
+Nota: 
+
+
+ Si se establece el atributo novalidate en el elemento <form>, la validación interactiva de las restricciones no se aplica.
+ Invocando al método send() en la interfaz HTMLFormElement no invoca a la validación de restricciones. en otras palabras, este método envía los datos del formulario al servidor aunque no se satisfagan las restricciones.
+
+
+
+Restricciones complejas usando la API de Restricciones de HTML5
+
+Usando JavaScript y la API de Restricciones, es posible implementar restricciones más complejas, por ejemplo, restricciones que combinen varios campos, o que involucren cálculos complejos.
+
+Básicamente, la idea es ejecutar JavaScript en un evento de algún campo del formulario (como onchange) para calcular si la restricción no se cumple, y entonces usar el método field.setCustomValidity() para establecer el resultado de la validación: una cadena vacía significa que la restricción se satisfizo, y cualquier otro texto significa que hay un error, siendo el texto el mensaje que se mostrará al usuario.
+
+Restricciones que combinan varios campos: Validación de código postal
+
+El formato de código postal varía de un país a otro. No sólo la mayoría de los países permiten un prefijo opcional con el código del país (como D- en Alemania, F- en Francia o Suiza), sino que algunos países tienen códigos postales con solamente un número fijo de dígitos; otros, como el Reino Unido, tienen estructuras más complejas, permitiendo letras en posiciones específicas.
+
+
+Nota: Esto no es una guía completa para una biblioteca de validación de código postal, sino más bien una demostración de conceptos clave.
+
+
+Como un ejemplo, añadiremos un script que verificará la validación de restricciones en este formulario simple:
+
+<form>
+    <label for="ZIP">Código postal : </label>
+    <input type="text" id="ZIP"> 
+    <label for="Country">País : </label>
+    <select id="Country">
+      <option value="ch">Suiza</option>
+      <option value="fr">Francia</option>
+      <option value="de">Alemania</option>
+      <option value="nl">Países Bajos</option>
+    </select>
+    <input type="submit" value="Validar">
+</form>
+
+Esto mostrará el siguiente formulario: 
+
+Código Postal :  Country: SuizaFranciaAlemaniaPaíses Bajos
+
+Primero, escribimos una función que revisará las restricciones en sí:
+
+function checkZIP() {
+  // Para cada país, se define el patrón para el código postal
+  var constraints = {
+    ch : [ '^(CH-)?\\d{4}$', "El código postal de Suiza debe tener cuatro dígitos: p.ej. CH-1950 o 1950" ],
+    fr : [ '^(F-)?\\d{5}$' , "El código postal de Francia debe tener cinco dígitos: p.ej. F-75012 o 75012" ],
+    de : [ '^(D-)?\\d{5}$' , "El código postal de Alemania debe tener cinco dígitos: p-ej. D-12345 o 12345" ],
+    nl : [ '^(NL-)?\\d{4}\\s*([A-RT-Z][A-Z]|S[BCE-RT-Z])$',
+                    "El código postal de Países Bajos debe tener cuatro dígitos, seguidos de dos letras excepto SA, SD y SS" ]
+  };
+  
+  // Se lee el ID del país
+  var country = document.getElementById("Country").value;
+
+  // Se obtiene el campo del código postal
+  var ZIPField = document.getElementById("ZIP");
+
+  // Se crea el validador de la restricción
+  var constraint = new RegExp(constraints[country][0], "");
+    console.log(constraint);
+
+
+  // ¡Se hace la revisión!
+  if (constraint.test(ZIPField.value)) {
+    // El código postal cumple la restricción, usamos la API de Restricciones para indicarlo
+    ZIPField.setCustomValidity("");
+  }
+  else {
+    // El código postal no cumple la restricción, usamos la API de Restricciones para
+    // dar un mensaje sobre el formato requerido para este país
+    ZIPField.setCustomValidity(constraints[country][1]);
+  }
+}
+
+
+Entonces, enlazamos este código al evento onchange del elemento <select> y al evento oninput del elemento <input>:
+
+window.onload = function () {
+    document.getElementById("Country").onchange = checkZIP;
+    document.getElementById("ZIP").oninput = checkZIP;
+}
+
+Puedes ver aquí un ejemplo en vivo de la validación de código postal.
+
+Limitando el tamaño de un archivo antes de ser subido
+
+Otra restricción común es limitar el tamaño de un archivo que será subido. Verificar esto de lado del cliente antes de que el archivo sea transmitido al servidor requiere combinar la API de Validación de Restricciones, y especialmente la función field.setCustomValidity(), con otra API de JavaScript, la File API.
+
+Aquí está la parte de HTML:
+
+<label for="FS">Selecciona un archivo menor a 75KB : </label>
+<input type="file" id="FS">
+
+Esto muestra lo siguiente:
+
+Seleciona un archivo menor a 75KB :  
+
+ 
+
+Con JavaScript, leemos el archivo seleccionado, usamos el método File.size() para obtener su tamaño, lo comparamos con el límite fijo (hard coded), y llamamos a la API de Validación de Restricciones para informar al navegador si no se cumple la restricción:
+
+function checkFileSize() {
+  var FS = document.getElementById("FS");
+  var files = FS.files;
+
+  // Si hay (por lo menos) un archivo seleccionado
+  if (files.length > 0) {
+     if (files[0].size > 75 * 1024) { // Validar la restricción
+       FS.setCustomValidity("El archivo seleccionado no debe ser mayor a 75KB");
+       return;
+     }
+  }
+  // No hay incumplimiento de la restricción
+  FS.setCustomValidity("");
+}
+
+ 
+
+Finalmente, anclamos el método al evento requerido:
+
+window.onload = function () {
+  document.getElementById("FS").onchange = checkFileSize;
+}
+
+Puedes ver aquí un ejemplo en vivo de la validación de tamaño de archivos.
+
+Estilos visuales de validación de restricciones
+
+Aparte de establecer las restricciones, los desarrolladores web querrán controlar los mensajes que son desplegados al usuario y los estilos de los mismos.
+
+Controlando el aspecto de los elementos
+
+El aspecto de los elementos puede ser controlado por medio de pseudo-clases de CSS.
+
+Pseudo-clases :required y :optional
+
+Las pseudo-clases :required y :optional permitene escribir selectores que coincidan con elementos de formulario que tengan el atributo required y los que no lo tengan, respectivamente.
+
+
+Pseudo-clase :-moz-placeholder
+
+Véase ::placeholder (experimental).
+
+Pseudo-clases :valid :invalid
+
+Las pseudo-clases :valid e :invalid son usadas para representar elementos <input> cuyo contenido es válido o inválido, respectivamente, acorde a las configuraciones de captura. Estas clases permiten al usuario estilizar elementos de formulario válidos e inválidos, para hacer más fácil el identificar elementos que tienen valores correctos o incorrectos.
+
+Estilos predeterminados
+
+Controlando el texto de incumplimiento de restricciones
+
+El atributo x-moz-errormessage
+
+El atributo x-moz-errormessage es una extensión de Mozilla que te permite especificar el mensaje de error que se mostrará cuando un campo no es validado exitosamente.
+
+
+Nota: Esta extensión no es estándar.
+
+
+element.setCustomValidity() de la API de Validación de Restricciones
+
+El método element.setCustomValidity(error) es usado para establecer un mensaje de error personalizado para mostrar cuando el formulario es enviado. El método toma una cadena de texto como parámetro con el error. Si el error es una cadena no vacía, el método asume que la validación no fue exitosa, y despliega el mensaje con el error indicado. Si el error es una cadena vacía, el elemento es considerado válido, y restablece el mensaje de error.
+
+Objeto ValidityState de la API de Validación de Restricciones
+
+La interfaz de DOM ValidityState representa los estados de validez en los que puede estar un elemento, respecto a la validación de restricciones. En conjunto, ayudan a explicar por qué el valor de un elemento falló en la validación, si no es válido.
+
+Examples of personalized styling
+
+HTML4 fallback
+
+Trivial fallback
+
+JS fallback
+
+Conclusión
+                  
+                
+              

@@ -3,10 +3,11 @@ const express=require('express');
 var app=express();
 var puerto = process.env.PORT||3000;
 var bodyparser=require("body-parser");
+var operaciones=require("./controlador/Facebook.js");
 // app.use();
 
 app.use(bodyparser.json());
-
+app.use(express.static(__dirname+"/texto/"));
 
 app.get("/webhook",(req,res)=>{
 
@@ -22,10 +23,7 @@ app.get("/webhook",(req,res)=>{
 
 
 
-app.post("/webhook",(req,res)=>{
-  let data = req.body;
-console.log(data);
-})
+app.post("/webhook",operaciones.RecibiendoMensajes);
 
 app.listen(puerto,function(){
 console.log("El servidor se esta ejecutando en el puerto ->" + puerto)

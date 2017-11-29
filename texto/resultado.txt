@@ -1,0 +1,130 @@
+
+                
+                  
+                    
+
+En un documento HTML, los selectores de clase buscan un elemento basado en el contenido de su atributo class. El atributo class está definido como una lista de elementos separados por espacio, y uno de esos elementos debe coincidir exactamente con el nombre de clase dado en el selector.
+
+Sintaxis
+
+.classname { style properties }
+
+Nótese que esto es equivalente al siguiente selector de atributo:
+
+[class~=classname] { style properties }
+
+Ejemplo
+
+CSS
+
+span.classy {
+  background-color: DodgerBlue;
+}
+
+
+HTML
+
+<span class="classy">Aquí hay un span con algo de texto.</span>
+<span>Aquí hay otro.</span>
+
+
+
+
+Especificaciones
+
+
+ 
+  
+   Especificación
+   Estatus
+   Comentarios
+  
+ 
+ 
+  
+   Selectors Level 4La definición de 'class selectors' en esta especificación.
+   Working Draft
+   Sin cambios
+  
+  
+   Selectors Level 3La definición de 'class selectors' en esta especificación.
+   Recommendation
+    
+  
+  
+   CSS Level 2 (Revision 1)La definición de 'child selectors' en esta especificación.
+   Recommendation
+    
+  
+  
+   CSS Level 1La definición de 'child selectors' en esta especificación.
+   Recommendation
+   Definición inicial
+  
+ 
+
+
+Compatibilidad de navegadores
+
+
+    
+    
+        Escritorio
+        Móvil
+    
+
+
+
+
+ 
+  
+   Característica
+   Chrome
+   Edge
+   Firefox (Gecko)
+   Internet Explorer
+   Opera
+   Safari
+  
+  
+   Soporte básico
+   (Yes)
+   (Yes)
+   (Yes)
+   (Yes)
+   (Yes)
+   (Yes)
+  
+ 
+
+
+
+
+
+ 
+  
+   Característica
+   Android
+   Chrome for Android
+   Edge
+   Firefox Mobile (Gecko)
+   IE Mobile
+   Opera Mobile
+   Safari Mobile
+  
+  
+   Soporte básico
+   ?
+   ?
+   (Yes)
+   ?
+   ?
+   ?
+   ?
+  
+ 
+
+
+                  
+                
+              
