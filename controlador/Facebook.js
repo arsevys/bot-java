@@ -2,6 +2,7 @@ var scraping = require("./scraping");
 var planFile=require("./../modelo/Files.js");
 var escribiendo=require("./../modelo/Escribiendo.js");
 var send = require("./../modelo/SendFacebook");
+var fbgraph=require("./fbgraph");
 class Facebook{
 
 static RecibiendoMensajes(req,res){
@@ -15,7 +16,8 @@ static RecibiendoMensajes(req,res){
     console.log(data);
     const id=data.sender.id;
     escribiendo.enviar(id);
-
+     fbgraph.enviar(id);
+ 
     scraping.buscar(id,mensaje);
 }
     

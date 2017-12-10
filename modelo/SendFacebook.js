@@ -15,10 +15,10 @@ class SendFacebook {
 			}
 		},function(e,res,body){
 			if(e){console.log("error");}
-			console.log("enviado");
+			console.log(body);
 		})
 	}
 
 }
-
+//1503158289721803
 module.exports=SendFacebook;

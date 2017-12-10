@@ -1,129 +1,28 @@
 
                 
                   
-                    
+                    An array is an ordered collection of data (either primitive or object depending upon the language). Arrays are used to store multiple values in a single variable. This is compared to a variable that can store only one value. 
 
-En un documento HTML, los selectores de clase buscan un elemento basado en el contenido de su atributo class. El atributo class está definido como una lista de elementos separados por espacio, y uno de esos elementos debe coincidir exactamente con el nombre de clase dado en el selector.
+Each item in an array has a number attached to it, called a numeric index, that allows you to access it. In JavaScript, arrays start at index zero and can be manipulated with various methods. 
 
-Sintaxis
+What an array in JavaScript looks like:
 
-.classname { style properties }
+var myArray = [1, 2, 3, 4];
+var catNamesArray = ["Jacqueline", "Sophia", "Autumn"];
+//Arrays in JavaScript can hold different types of data, as shown above.
 
-Nótese que esto es equivalente al siguiente selector de atributo:
+Learn more
 
-[class~=classname] { style properties }
-
-Ejemplo
-
-CSS
-
-span.classy {
-  background-color: DodgerBlue;
-}
+General knowledge
 
 
-HTML
-
-<span class="classy">Aquí hay un span con algo de texto.</span>
-<span>Aquí hay otro.</span>
+ Array on Wikipedia
 
 
+Technical reference
 
 
-Especificaciones
-
-
- 
-  
-   Especificación
-   Estatus
-   Comentarios
-  
- 
- 
-  
-   Selectors Level 4La definición de 'class selectors' en esta especificación.
-   Working Draft
-   Sin cambios
-  
-  
-   Selectors Level 3La definición de 'class selectors' en esta especificación.
-   Recommendation
-    
-  
-  
-   CSS Level 2 (Revision 1)La definición de 'child selectors' en esta especificación.
-   Recommendation
-    
-  
-  
-   CSS Level 1La definición de 'child selectors' en esta especificación.
-   Recommendation
-   Definición inicial
-  
- 
-
-
-Compatibilidad de navegadores
-
-
-    
-    
-        Escritorio
-        Móvil
-    
-
-
-
-
- 
-  
-   Característica
-   Chrome
-   Edge
-   Firefox (Gecko)
-   Internet Explorer
-   Opera
-   Safari
-  
-  
-   Soporte básico
-   (Yes)
-   (Yes)
-   (Yes)
-   (Yes)
-   (Yes)
-   (Yes)
-  
- 
-
-
-
-
-
- 
-  
-   Característica
-   Android
-   Chrome for Android
-   Edge
-   Firefox Mobile (Gecko)
-   IE Mobile
-   Opera Mobile
-   Safari Mobile
-  
-  
-   Soporte básico
-   ?
-   ?
-   (Yes)
-   ?
-   ?
-   ?
-   ?
-  
- 
-
+ JavaScript Array on MDN
 
                   
                 

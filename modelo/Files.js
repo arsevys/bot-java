@@ -12,7 +12,7 @@ class Files {
     "attachment":{
       "type":"file", 
       "payload":{
-        "url":"https://cdaa3dee.ngrok.io/"+encodeURIComponent(nom)+".txt" 
+        "url":"https://cf56a380.ngrok.io/"+encodeURIComponent(nom)+".txt" 
         
       }
     }
